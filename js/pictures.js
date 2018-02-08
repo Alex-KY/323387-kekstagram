@@ -33,15 +33,6 @@ var getComments = function () {
   return comments;
 };
 
-// Функция создания и заполнения элемента шаблона
-var fillItemTemplate = function (picture) {
-  var element = template.content.cloneNode(true);
-  element.querySelector('img').setAttribute('src', picture.url);
-  element.querySelector('.picture-likes').textContent = picture.likes;
-  element.querySelector('.picture-comments').textContent = picture.comments.length;
-  fragment.appendChild(element);
-};
-
 // В этом месте начинается основной код программы
 for (var i = 0; i < PICTURE_COUNT; i++) {
 
@@ -51,8 +42,17 @@ for (var i = 0; i < PICTURE_COUNT; i++) {
   pictures[i].likes = getLikes();
   pictures[i].comments = getComments();
 
-  fillItemTemplate(pictures[i]);
 }
+
+// Заполнение элемента шаблона
+pictures.forEach(function (item) {
+  var element = template.content.cloneNode(true);
+  element.querySelector('img').setAttribute('src', item.url);
+  element.querySelector('.picture-likes').textContent = item.likes;
+  element.querySelector('.picture-comments').textContent = item.comments.length;
+
+  fragment.appendChild(element);
+});
 
 // Добавляем отрисованный шаблон на страницу в заданный элемент DOM-а
 pic.appendChild(fragment);
