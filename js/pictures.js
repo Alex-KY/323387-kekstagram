@@ -10,6 +10,9 @@ var COMMENTS = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 var ESC = 27;
+var ENTER = 13;
+var LEFT_ARROW = 37;
+var RIGHT_ARROW = 39;
 var pictures = [];
 var template = document.querySelector('#picture-template');
 var pic = document.querySelector('.pictures');
@@ -112,6 +115,91 @@ var effectLabels = uploadControls.querySelectorAll('.upload-effect-label');
 var inputArray = uploadControls.querySelectorAll('input[type = "radio"]');
 var effectBar = uploadControls.querySelector('.upload-effect-level');
 
+// Открытое в данный момент окно
+var popup;
+var indexPicture;
+
+// Открыть окно
+var openPopup = function (winUp) {
+  popup = winUp;
+  popup.classList.remove('hidden');
+};
+// Закрыть окно
+var closePopup = function () {
+  popup.classList.add('hidden');
+};
+
+// Нажатие ESC в открытом окне
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC && evt.target !== uploadHashtag && evt.target !== uploadDescription) {
+    closePopup();
+    if (popup === uploadOverlay) {
+      uploadStyleChange('none', 0);
+      document.querySelector('#upload-file').value = '';
+    } else {
+      document.removeEventListener('keydown', pressLeftRightArrow);
+    }
+  }
+};
+
+var uploadStyleChange = function (a, index) {
+  // удаляем все атрибуты checked с чекбоксов
+  removeCheck();
+  // добавляем checked для нужного чекбокса
+  inputArray[index].setAttribute('checked', '');
+  var style = uploadPreviewImg.style;
+  // открываем скролл эффектов
+  effectBar.style.display = 'block';
+  // Применяем нужные эффекты в нужном количестве
+  switch (a) {
+    case 'chrome':
+      style.filter = 'grayscale(' + effectLevel / 100 + ')';
+      break;
+
+    case 'sepia':
+      style.filter = 'sepia(' + effectLevel / 100 + ')';
+      break;
+
+    case 'marvin':
+      style.filter = 'invert(' + effectLevel + ')';
+      break;
+
+    case 'phobos':
+      style.filter = 'blur(' + effectLevel * 3 / 100 + 'px)';
+      break;
+
+    case 'heat':
+      style.filter = 'brightness(' + effectLevel * 3 / 100 + ')';
+      break;
+
+    case 'none':
+      effectBar.style.display = 'none';
+      uploadPreviewImg.style.filter = 'none';
+  }
+};
+
+var pressLeftRightArrow = function (evt) {
+  if (evt.keyCode === LEFT_ARROW) {
+    if (indexPicture > 0) {
+      fillPictureOverlay(--indexPicture);
+    }
+  }
+  if (evt.keyCode === RIGHT_ARROW) {
+    if (indexPicture < pictures.length - 1) {
+      fillPictureOverlay(++indexPicture);
+    }
+  }
+};
+
+var addEventsOnPictures = function (evt, item, index) {
+  item.setAttribute('onclick', evt.preventDefault());
+  indexPicture = index;
+  openPopup(galleryOverlay);
+  fillPictureOverlay(index);
+  document.addEventListener('keydown', pressLeftRightArrow);
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
 // По умолчанию скрываем скролл для эффектов
 effectBar.style.display = 'none';
 // Выставляем значение скролла эффектов на 100%
@@ -122,16 +210,13 @@ effectVal.style.width = effectLevel + '%';
 
 // Добавляем на каждую превьюшку событие - открытие оверлея
 pictureArray.forEach(function (item, index) {
-  item.addEventListener('click', function () {
-    item.setAttribute('onclick', event.preventDefault());
-    galleryOverlay.classList.remove('hidden');
-    fillPictureOverlay(index);
-
-    document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ESC) {
-        galleryOverlay.classList.add('hidden');
-      }
-    });
+  item.addEventListener('click', function (evt) {
+    addEventsOnPictures(evt, item, index);
+  });
+  item.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER) {
+      addEventsOnPictures(evt, item, index);
+    }
 
   });
 
@@ -140,66 +225,41 @@ pictureArray.forEach(function (item, index) {
 // Добавляем на каждую превьюшку эффектов событие - применить эффект
 effectLabels.forEach(function (item, index) {
   var a = inputArray[index].getAttribute('value');
-  item.addEventListener('click', function () {
-    // удаляем все атрибуты checked с чекбоксов
-    removeCheck();
-    // добавляем checked для нужного чекбокса
-    inputArray[index].setAttribute('checked', '');
-    var style = uploadPreviewImg.style;
-    // открываем скролл эффектов
-    effectBar.style.display = 'block';
-    // Применяем нужные эффекты в нужном количестве
-    switch (a) {
-      case 'chrome':
-        style.filter = 'grayscale(' + effectLevel / 100 + ')';
-        break;
+  item.setAttribute('tabindex', 0);
 
-      case 'sepia':
-        style.filter = 'sepia(' + effectLevel / 100 + ')';
-        break;
-
-      case 'marvin':
-        style.filter = 'invert(' + effectLevel + ')';
-        break;
-
-      case 'phobos':
-        style.filter = 'blur(' + effectLevel * 3 / 100 + 'px)';
-        break;
-
-      case 'heat':
-        style.filter = 'brightness(' + effectLevel * 3 / 100 + ')';
-        break;
-
-      case 'none':
-        effectBar.style.display = 'none';
-        uploadPreviewImg.style.filter = 'none';
+  item.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER) {
+      uploadStyleChange(a, index);
     }
+  });
+
+  item.addEventListener('click', function () {
+    uploadStyleChange(a, index);
   });
 
 });
 
 galleryOverlayClose.addEventListener('click', function () {
-  galleryOverlay.classList.add('hidden');
+  closePopup();
+  document.removeEventListener('keydown', onPopupEscPress);
 });
 
+// Открытие и закрытие окна upload
 var uploadOpen = document.querySelector('#upload-file');
 var uploadClose = uploadOverlay.querySelector('.upload-form-cancel');
 
+// Окна ввода с клавиатуры
+var uploadHashtag = uploadOverlay.querySelector('.upload-form-hashtags');
+var uploadDescription = uploadOverlay.querySelector('.upload-form-description');
+
 uploadOpen.addEventListener('change', function () {
-  uploadOverlay.classList.remove('hidden');
-
-  document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ESC) {
-      uploadOverlay.classList.add('hidden');
-      document.querySelector('#upload-file').value = '';
-    }
-  });
-
+  openPopup(uploadOverlay);
+  document.addEventListener('keydown', onPopupEscPress);
 });
 
 uploadClose.addEventListener('click', function () {
-  uploadOverlay.classList.add('hidden');
-  document.querySelector('#upload-file').value = '';
+  closePopup();
+  document.removeEventListener('keydown', onPopupEscPress);
 });
 
 effectPin.addEventListener('mouseup', function () {
