@@ -114,6 +114,7 @@ var uploadControls = document.querySelector('.upload-effect-controls');
 var effectLabels = uploadControls.querySelectorAll('.upload-effect-label');
 var inputArray = uploadControls.querySelectorAll('input[type = "radio"]');
 var effectBar = uploadControls.querySelector('.upload-effect-level');
+var body = document.querySelector('body');
 
 // Открытое в данный момент окно
 var popup;
@@ -123,10 +124,13 @@ var indexPicture;
 var openPopup = function (winUp) {
   popup = winUp;
   popup.classList.remove('hidden');
+  body.style.overflow = 'hidden';
+  tabinexSwitch();
 };
 // Закрыть окно
 var closePopup = function () {
   popup.classList.add('hidden');
+  body.style.overflow = 'auto';
 };
 
 // Нажатие ESC в открытом окне
@@ -239,6 +243,27 @@ effectLabels.forEach(function (item, index) {
 
 });
 
+// Удаляем перемещение по элементам заднего фона
+var tabinexSwitch = function () {
+  var footerLinks = document.querySelector('footer').querySelectorAll('a');
+  var flag = pic.querySelector('a').getAttribute('tabindex');
+  if (flag !== -1) {
+    pic.querySelectorAll('a').forEach(function (item) {
+      item.setAttribute('tabindex', -1);
+    });
+    footerLinks.forEach(function (item) {
+      item.setAttribute('tabindex', -1);
+    });
+  } else {
+    pic.querySelectorAll('a').forEach(function (item) {
+      item.setAttribute('tabindex', 0);
+    });
+    footerLinks.forEach(function (item) {
+      item.setAttribute('tabindex', 0);
+    });
+  }
+};
+
 galleryOverlayClose.addEventListener('click', function () {
   closePopup();
   document.removeEventListener('keydown', onPopupEscPress);
@@ -247,10 +272,6 @@ galleryOverlayClose.addEventListener('click', function () {
 // Открытие и закрытие окна upload
 var uploadOpen = document.querySelector('#upload-file');
 var uploadClose = uploadOverlay.querySelector('.upload-form-cancel');
-
-// Окна ввода с клавиатуры
-var uploadHashtag = uploadOverlay.querySelector('.upload-form-hashtags');
-var uploadDescription = uploadOverlay.querySelector('.upload-form-description');
 
 uploadOpen.addEventListener('change', function () {
   openPopup(uploadOverlay);
@@ -265,4 +286,90 @@ uploadClose.addEventListener('click', function () {
 effectPin.addEventListener('mouseup', function () {
   var a = effectPin.style.left;
   effectLevel = a.slice(0, a.length - 1); // показывает значение без %
+});
+
+// Проверка формы на валидность
+// Окна ввода с клавиатуры
+var uploadHashtag = uploadOverlay.querySelector('.upload-form-hashtags');
+var uploadDescription = uploadOverlay.querySelector('.upload-form-description');
+
+uploadHashtag.addEventListener('change', function () {
+  var message = [];
+  var hashtags = uploadHashtag.value;
+
+  var hashtag = hashtags.split(' ');
+  for (i = 0; i < hashtag.length; i++) {
+    if (hashtag[i].slice(0, 1) !== '#') {
+      message.push('Хэш-теги должны начинаться с решётки');
+      break;
+    }
+  }
+
+  for (i = 0; i < hashtag.length; i++) {
+    if (hashtag[i].slice(1, hashtag[i].length).indexOf('#') >= 0) {
+      message.push('Хэш-теги должны разделяться пробелами');
+      break;
+    }
+  }
+
+  for (i = 0; i < hashtag.length; i++) {
+    var count = 0;
+    for (var k = 0; k < hashtag.length; k++) {
+      if (hashtag[k].toLowerCase() === hashtag[i].toLowerCase()) {
+        count++;
+      }
+    }
+    if (count > 1) {
+      message.push('Один и тот же хэш-тег не может быть использован дважды');
+      break;
+    }
+  }
+
+  if (hashtag.length > 5) {
+    message.push('Хэш-тегов не должно быть больше 5');
+  }
+
+  var reg = /[#a-zA-Zа-яА-Я0-9]/;
+  for (i = 0; i < hashtag.length; i++) {
+    if (!reg.test(hashtag[i])) {
+      message.push('Введены недопустимые символы');
+      break;
+    }
+  }
+
+  for (i = 0; i < hashtag.length; i++) {
+    if (hashtag[i].length > 20) {
+      message.push('Максимальная длина одного хэш-тега 20 символов');
+      break;
+    }
+  }
+
+  var getMessage = function () {
+    var templateMessage = '';
+    message.forEach(function (item, index) {
+      templateMessage += '[Ошибка №' + (index + 1) + '] ' + item + '. ';
+    });
+    return templateMessage;
+  };
+
+  if (message.length > 0) {
+    uploadHashtag.setCustomValidity(getMessage());
+    uploadHashtag.style.outline = '2px solid red';
+  } else {
+    uploadHashtag.setCustomValidity('');
+    uploadHashtag.style.outline = 'none';
+  }
+
+  window.console.warn(message);
+});
+
+uploadDescription.addEventListener('change', function () {
+  if (uploadDescription.value.length > 140) {
+    uploadDescription.setCustomValidity('Длина комментария не может составлять больше 140 символов');
+    uploadDescription.style.outline = '2px solid red';
+  } else {
+    uploadDescription.setCustomValidity('');
+    uploadDescription.style.outline = 'none';
+  }
+
 });
