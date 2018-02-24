@@ -108,12 +108,13 @@ var galleryOverlay = document.querySelector('.gallery-overlay');
 var galleryOverlayClose = galleryOverlay.querySelector('.gallery-overlay-close');
 var uploadOverlay = document.querySelector('.upload-overlay');
 var pictureArray = document.querySelectorAll('.picture');
-var effectPin = document.querySelector('.upload-effect-level-pin');
-var effectVal = document.querySelector('.upload-effect-level-val');
 var uploadControls = document.querySelector('.upload-effect-controls');
 var effectLabels = uploadControls.querySelectorAll('.upload-effect-label');
 var inputArray = uploadControls.querySelectorAll('input[type = "radio"]');
 var effectBar = uploadControls.querySelector('.upload-effect-level');
+var effectLine = uploadControls.querySelector('.upload-effect-level-line');
+var effectPin = uploadControls.querySelector('.upload-effect-level-pin');
+var effectVal = uploadControls.querySelector('.upload-effect-level-val');
 var body = document.querySelector('body');
 
 // Открытое в данный момент окно
@@ -146,16 +147,26 @@ var onPopupEscPress = function (evt) {
   }
 };
 
-var uploadStyleChange = function (a, index) {
-  // удаляем все атрибуты checked с чекбоксов
-  removeCheck();
-  // добавляем checked для нужного чекбокса
-  inputArray[index].setAttribute('checked', '');
+var uploadStyleChange = function (index) {
+  var effect;
+  if (!index && index !== 0) {
+    effect = uploadControls.querySelector('input[checked]').getAttribute('value');
+  } else {
+    effect = inputArray[index].getAttribute('value');
+    // удаляем все атрибуты checked с чекбоксов
+    removeCheck();
+    // добавляем checked для нужного чекбокса
+    inputArray[index].setAttribute('checked', '');
+    // adfsdf
+    effectLevel = 100;
+    effectPin.style.left = 100 + '%';
+    effectVal.style.width = 100 + '%';
+  }
   var style = uploadPreviewImg.style;
   // открываем скролл эффектов
   effectBar.style.display = 'block';
   // Применяем нужные эффекты в нужном количестве
-  switch (a) {
+  switch (effect) {
     case 'chrome':
       style.filter = 'grayscale(' + effectLevel / 100 + ')';
       break;
@@ -165,7 +176,7 @@ var uploadStyleChange = function (a, index) {
       break;
 
     case 'marvin':
-      style.filter = 'invert(' + effectLevel + ')';
+      style.filter = 'invert(' + effectLevel + '%)';
       break;
 
     case 'phobos':
@@ -228,17 +239,16 @@ pictureArray.forEach(function (item, index) {
 
 // Добавляем на каждую превьюшку эффектов событие - применить эффект
 effectLabels.forEach(function (item, index) {
-  var a = inputArray[index].getAttribute('value');
   item.setAttribute('tabindex', 0);
 
   item.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER) {
-      uploadStyleChange(a, index);
+      uploadStyleChange(index);
     }
   });
 
   item.addEventListener('click', function () {
-    uploadStyleChange(a, index);
+    uploadStyleChange(index);
   });
 
 });
@@ -281,11 +291,6 @@ uploadOpen.addEventListener('change', function () {
 uploadClose.addEventListener('click', function () {
   closePopup();
   document.removeEventListener('keydown', onPopupEscPress);
-});
-
-effectPin.addEventListener('mouseup', function () {
-  var a = effectPin.style.left;
-  effectLevel = a.slice(0, a.length - 1); // показывает значение без %
 });
 
 // Проверка формы на валидность
@@ -373,3 +378,64 @@ uploadDescription.addEventListener('change', function () {
   }
 
 });
+
+// перетаскивание на слайдере эффектов
+effectPin.style.zIndex = 1;
+effectPin.style.cursor = 'pointer';
+effectPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var fixSlider = function () {
+
+    if (effectLevel < 0 || effectPin.offsetLeft < 0) {
+      effectLevel = 0;
+      effectPin.style.left = 0;
+      effectVal.style.width = 0;
+    }
+    if (effectLevel > 100 || effectPin.offsetLeft > effectLine.offsetWidth) {
+      effectLevel = 100;
+      effectPin.style.left = effectLine.offsetWidth + 'px';
+      effectVal.style.width = effectLine.offsetWidth + 'px';
+    }
+
+  };
+  var startMinPin = effectBar.offsetLeft + effectLine.offsetLeft;
+  var startCoord = {
+    x: (evt.clientX).toFixed(0)
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: (startCoord.x - moveEvt.clientX).toFixed(0)
+    };
+
+    var r = startCoord.x - startMinPin - shift.x;
+    if (r > 0 && r < effectLine.offsetWidth - effectPin.offsetWidth) {
+      var effect = effectLevel * effectLine.offsetWidth / 100;
+
+      if (effectPin.offsetLeft >= 0 && effectPin.offsetLeft <= effectLine.offsetWidth) {
+        effectPin.style.left = effect - shift.x + 'px';
+        effectVal.style.width = effect - shift.x + 'px';
+      }
+    }
+  };
+
+  var onMouseUp = function (moveEvt) {
+    moveEvt.preventDefault();
+    effectLevel = (effectPin.style.left).slice(0, effectPin.style.left.length - 2) / effectLine.offsetWidth * 100;
+    effectLevel = effectLevel.toFixed(0);
+
+    fixSlider();
+
+    uploadStyleChange();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
+
