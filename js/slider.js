@@ -6,6 +6,7 @@
   var effectLine = uploadControls.querySelector('.upload-effect-level-line');
   var effectPin = uploadControls.querySelector('.upload-effect-level-pin');
   var effectVal = uploadControls.querySelector('.upload-effect-level-val');
+  var effect = 100;
 
   // перетаскивание на слайдере эффектов
   effectPin.style.zIndex = 1;
@@ -13,12 +14,10 @@
 
   // По умолчанию скрываем скролл для эффектов
   effectBar.style.display = 'none';
-  // Выставляем значение скролла эффектов на 100%
-  window.slider = {
-    effectLevel: 100
-  };
-  effectPin.style.left = window.slider.effectLevel + '%';
-  effectVal.style.width = window.slider.effectLevel + '%';
+  effectBar.setAttribute('tabindex', 0);
+  effectLine.style.cursor = 'pointer';
+  effectPin.style.left = effect + '%';
+  effectVal.style.width = effect + '%';
 
   effectPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -77,4 +76,51 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  effectLine.addEventListener('mouseover', function () {
+    effectLine.style.height = effectVal.offsetHeight * 2 + 'px';
+  });
+  effectLine.addEventListener('mouseout', function () {
+    effectLine.style.height = effectVal.offsetHeight / 2 + 'px';
+  });
+
+  var pressLeftRightArrow = function (evt) {
+    if (evt.keyCode === 37) {
+      if (window.slider.effectLevel > 0) {
+        window.slider.effectLevel--;
+      } else {
+        window.slider.effectLevel = 0;
+      }
+    }
+    if (evt.keyCode === 39) {
+      if (window.slider.effectLevel < 100) {
+        window.slider.effectLevel++;
+      } else {
+        window.slider.effectLevel = 100;
+      }
+    }
+    var a = window.slider.effectLevel * effectLine.offsetWidth / 100;
+    effectPin.style.left = a + 'px';
+    effectVal.style.width = a + 'px';
+    window.upload.uploadStyleChange();
+  };
+
+  effectBar.addEventListener('keydown', pressLeftRightArrow);
+  effectLine.addEventListener('click', function (evt) {
+    var a = evt.clientX - effectBar.offsetLeft - (effectLine.offsetLeft + effectPin.offsetWidth) / 2;
+    if (a <= 0) {
+      a = 0;
+    } else if (a >= effectLine.offsetWidth) {
+      a = effectLine.offsetWidth;
+    }
+    window.slider.effectLevel = +(a / effectLine.offsetWidth * 100).toFixed(0);
+    effectPin.style.left = a + 'px';
+    effectVal.style.width = a + 'px';
+    window.upload.uploadStyleChange();
+  });
+
+  // Выставляем значение скролла эффектов на 100%
+  window.slider = {
+    effectLevel: 100
+  };
 })();

@@ -45,6 +45,36 @@
     // g.querySelector('input[checked]').removeAttribute('checked');
   };
 
+  // Добавляем на каждую превьюшку эффектов событие - применить эффект
+  effectLabels.forEach(function (item, index) {
+    item.setAttribute('tabindex', 0);
+
+    item.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === 13) {
+        window.upload.uploadStyleChange(index);
+      }
+    });
+
+    item.addEventListener('click', function () {
+      window.upload.uploadStyleChange(index);
+    });
+
+  });
+
+  // Открытие и закрытие окна upload
+  var uploadOpen = document.querySelector('#upload-file');
+  var uploadClose = uploadOverlay.querySelector('.upload-form-cancel');
+
+  uploadOpen.addEventListener('change', function () {
+    window.popups.openPopup(uploadOverlay);
+    document.addEventListener('keydown', window.popups.onPopupEscPress);
+  });
+
+  uploadClose.addEventListener('click', function () {
+    window.popups.closePopup();
+    document.removeEventListener('keydown', window.popups.onPopupEscPress);
+  });
+
   window.upload = {
     uploadStyleChange: function (index) {
       var effect;
@@ -92,34 +122,4 @@
       }
     }
   };
-
-  // Добавляем на каждую превьюшку эффектов событие - применить эффект
-  effectLabels.forEach(function (item, index) {
-    item.setAttribute('tabindex', 0);
-
-    item.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.ENTER) {
-        window.upload.uploadStyleChange(index);
-      }
-    });
-
-    item.addEventListener('click', function () {
-      window.upload.uploadStyleChange(index);
-    });
-
-  });
-
-  // Открытие и закрытие окна upload
-  var uploadOpen = document.querySelector('#upload-file');
-  var uploadClose = uploadOverlay.querySelector('.upload-form-cancel');
-
-  uploadOpen.addEventListener('change', function () {
-    window.popups.openPopup(uploadOverlay);
-    document.addEventListener('keydown', window.popups.onPopupEscPress);
-  });
-
-  uploadClose.addEventListener('click', function () {
-    window.popups.closePopup();
-    document.removeEventListener('keydown', window.popups.onPopupEscPress);
-  });
 })();

@@ -1,10 +1,5 @@
 'use strict';
 
-window.ESC = 27;
-window.ENTER = 13;
-window.LEFT_ARROW = 37;
-window.RIGHT_ARROW = 39;
-
 (function () {
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadHashtag = uploadOverlay.querySelector('.upload-form-hashtags');

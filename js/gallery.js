@@ -14,9 +14,9 @@
     galleryOverlay.querySelector('.likes-count').textContent = window.pictures[index].likes;
     galleryOverlay.querySelector('.comments-count').textContent = window.pictures[index].comments.length;
   };
-  window.gallery = {};
+
   var pressLeftRightArrow = function (evt) {
-    if (evt.keyCode === window.LEFT_ARROW) {
+    if (evt.keyCode === 37) {
       if (indexPicture > 0) {
         fillPictureOverlay(--indexPicture);
       } else {
@@ -24,7 +24,7 @@
         fillPictureOverlay(indexPicture);
       }
     }
-    if (evt.keyCode === window.RIGHT_ARROW) {
+    if (evt.keyCode === 39) {
       if (indexPicture < window.pictures.length - 1) {
         fillPictureOverlay(++indexPicture);
       } else {
@@ -49,7 +49,7 @@
       addEventsOnPictures(evt, item, index);
     });
     item.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.ENTER) {
+      if (evt.keyCode === 13) {
         addEventsOnPictures(evt, item, index);
       }
 
