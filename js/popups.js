@@ -13,7 +13,7 @@
   // Удаляем перемещение по элементам заднего фона
   var tabinexSwitch = function () {
     var footerLinks = document.querySelector('footer').querySelectorAll('a');
-    var flag = pic.querySelector('a').getAttribute('tabindex');
+    var flag = +pic.querySelector('a').getAttribute('tabindex');
     if (flag !== -1) {
       pic.querySelectorAll('a').forEach(function (item) {
         item.setAttribute('tabindex', -1);
@@ -43,8 +43,9 @@
 
   };
 
-  // Открыть окно
   window.popups = {
+
+    // Открыть окно
     openPopup: function (winUp) {
       popup = winUp;
       popup.classList.remove('hidden');
@@ -57,11 +58,12 @@
       popup.classList.add('hidden');
       body.style.overflow = 'auto';
       close();
+      tabinexSwitch();
     },
 
     // Нажатие ESC в открытом окне
     onPopupEscPress: function (evt) {
-      if (evt.keyCode === window.ESC && evt.target !== uploadHashtag && evt.target !== uploadDescription) {
+      if (evt.keyCode === 27 && evt.target !== uploadHashtag && evt.target !== uploadDescription) {
         window.popups.closePopup();
       }
     }

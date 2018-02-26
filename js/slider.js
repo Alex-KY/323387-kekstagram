@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var effectContainer = document.querySelector('.upload-effect__container');
   var uploadControls = document.querySelector('.upload-effect-controls');
   var effectBar = uploadControls.querySelector('.upload-effect-level');
   var effectLine = uploadControls.querySelector('.upload-effect-level-line');
@@ -37,7 +38,6 @@
 
     };
 
-    var startMinPin = effectBar.offsetLeft + effectLine.offsetLeft;
     var startCoord = {
       x: (evt.clientX).toFixed(0)
     };
@@ -49,17 +49,20 @@
         x: (startCoord.x - moveEvt.clientX).toFixed(0)
       };
 
-      var r = startCoord.x - startMinPin - shift.x;
-      if (r > 0 && r < effectLine.offsetWidth - effectPin.offsetWidth) {
-        var effectForce = window.slider.effectLevel * effectLine.offsetWidth / 100;
+      var effectForce = window.slider.effectLevel * effectLine.offsetWidth / 100;
 
-        if (effectPin.offsetLeft >= 0 && effectPin.offsetLeft <= effectLine.offsetWidth) {
-          effectPin.style.left = effectForce - shift.x + 'px';
-          effectVal.style.width = effectForce - shift.x + 'px';
-        }
+      if (effectForce - shift.x < 0) {
+        effectPin.style.left = 0;
+        effectVal.style.width = 0;
+      } else if (effectForce - shift.x > effectLine.offsetWidth) {
+        effectPin.style.left = effectLine.offsetWidth + 'px';
+        effectVal.style.width = effectLine.offsetWidth + 'px';
+      } else {
+        effectPin.style.left = effectForce - shift.x + 'px';
+        effectVal.style.width = effectForce - shift.x + 'px';
       }
-    };
 
+    };
     var onMouseUp = function (moveEvt) {
       moveEvt.preventDefault();
       window.slider.effectLevel = (effectPin.style.left).slice(0, effectPin.style.left.length - 2) / effectLine.offsetWidth * 100;
@@ -107,7 +110,7 @@
 
   effectBar.addEventListener('keydown', pressLeftRightArrow);
   effectLine.addEventListener('click', function (evt) {
-    var a = evt.clientX - effectBar.offsetLeft - (effectLine.offsetLeft + effectPin.offsetWidth) / 2;
+    var a = evt.clientX - effectContainer.offsetLeft - (effectContainer.offsetWidth - effectLine.offsetWidth) / 2;
     if (a <= 0) {
       a = 0;
     } else if (a >= effectLine.offsetWidth) {
