@@ -4,6 +4,7 @@
 (function () {
   var galleryOverlay = document.querySelector('.gallery-overlay');
   var galleryOverlayClose = galleryOverlay.querySelector('.gallery-overlay-close');
+  var pictureArray = document.querySelectorAll('.picture');
 
   var indexPicture;
 
@@ -25,7 +26,7 @@
 
   // Добавляем на каждую превьюшку событие - открытие оверлея
   var initAddEvents = function () {
-    var pictureArray = document.querySelectorAll('.picture');
+    pictureArray = document.querySelectorAll('.picture');
     pictureArray.forEach(function (item, index) {
       item.addEventListener('click', function (evt) {
         addEventsOnPictures(evt, item, index);

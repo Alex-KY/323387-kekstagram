@@ -14,7 +14,6 @@
   var template = document.querySelector('#picture-template');
   var pic = document.querySelector('.pictures');
   var fragment = document.createDocumentFragment();
-  var filters = document.querySelector('.filters');
 
   // Функция получения случайного количества лайков
   var getLikes = function () {
