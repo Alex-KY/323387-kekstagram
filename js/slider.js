@@ -7,6 +7,7 @@
   var effectLine = uploadControls.querySelector('.upload-effect-level-line');
   var effectPin = uploadControls.querySelector('.upload-effect-level-pin');
   var effectVal = uploadControls.querySelector('.upload-effect-level-val');
+  var effectValue = uploadControls.querySelector('.upload-effect-level-value');
   var effect = 100;
 
   // перетаскивание на слайдере эффектов
@@ -67,6 +68,7 @@
       moveEvt.preventDefault();
       window.slider.effectLevel = (effectPin.style.left).slice(0, effectPin.style.left.length - 2) / effectLine.offsetWidth * 100;
       window.slider.effectLevel = +window.slider.effectLevel.toFixed(0);
+      effectValue.setAttribute('value', window.slider.effectLevel);
 
       fixSlider();
 
@@ -105,6 +107,7 @@
     var a = window.slider.effectLevel * effectLine.offsetWidth / 100;
     effectPin.style.left = a + 'px';
     effectVal.style.width = a + 'px';
+    effectValue.setAttribute('value', window.slider.effectLevel);
     window.upload.uploadStyleChange();
   };
 
@@ -119,6 +122,7 @@
     window.slider.effectLevel = +(a / effectLine.offsetWidth * 100).toFixed(0);
     effectPin.style.left = a + 'px';
     effectVal.style.width = a + 'px';
+    effectValue.setAttribute('value', window.slider.effectLevel);
     window.upload.uploadStyleChange();
   });
 

@@ -74,7 +74,6 @@
       uploadHashtag.style.outline = 'none';
     }
 
-    window.console.warn(message);
   });
 
   uploadDescription.addEventListener('change', function () {

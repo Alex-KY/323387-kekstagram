@@ -14,6 +14,7 @@
   var template = document.querySelector('#picture-template');
   var pic = document.querySelector('.pictures');
   var fragment = document.createDocumentFragment();
+  var filters = document.querySelector('.filters');
 
   // Функция получения случайного количества лайков
   var getLikes = function () {
@@ -45,16 +46,41 @@
 
   }
 
-  // Заполнение элемента шаблона
-  window.pictures.forEach(function (item) {
-    var element = template.content.cloneNode(true);
-    element.querySelector('img').setAttribute('src', item.url);
-    element.querySelector('.picture-likes').textContent = item.likes;
-    element.querySelector('.picture-comments').textContent = item.comments.length;
+  // Заполнение элемента шаблона посредством скачивания данных с сервера
 
-    fragment.appendChild(element);
-  });
+  var saveNetData = function (data) {
+    window.pictures = data;
+    window.pictures.forEach(function (item) {
+      var element = template.content.cloneNode(true);
+      element.querySelector('img').setAttribute('src', item.url);
+      element.querySelector('.picture-likes').textContent = item.likes;
+      element.querySelector('.picture-comments').textContent = item.comments.length;
+      fragment.appendChild(element);
+    });
+
+    addTemplateOnPage();
+    window.gallery.initEventsOnPictures();
+  };
+  var onError = function (message) {
+    alert.warn(message);
+
+    // Заполнение элемента шаблона "локально"
+    window.pictures.forEach(function (item) {
+      var element = template.content.cloneNode(true);
+      element.querySelector('img').setAttribute('src', item.url);
+      element.querySelector('.picture-likes').textContent = item.likes;
+      element.querySelector('.picture-comments').textContent = item.comments.length;
+
+      fragment.appendChild(element);
+    });
+    addTemplateOnPage();
+    window.gallery.initEventsOnPictures();
+  };
 
   // Добавляем отрисованный шаблон на страницу в заданный элемент DOM-а
-  pic.appendChild(fragment);
+  var addTemplateOnPage = function () {
+    pic.appendChild(fragment);
+  };
+
+  window.load('https://js.dump.academy/kekstagram/data', saveNetData, onError);
 })();

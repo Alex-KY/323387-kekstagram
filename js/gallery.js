@@ -4,7 +4,6 @@
 (function () {
   var galleryOverlay = document.querySelector('.gallery-overlay');
   var galleryOverlayClose = galleryOverlay.querySelector('.gallery-overlay-close');
-  var pictureArray = document.querySelectorAll('.picture');
 
   var indexPicture;
 
@@ -25,18 +24,21 @@
   };
 
   // Добавляем на каждую превьюшку событие - открытие оверлея
-  pictureArray.forEach(function (item, index) {
-    item.addEventListener('click', function (evt) {
-      addEventsOnPictures(evt, item, index);
-    });
-    item.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === 13) {
+  var initAddEvents = function () {
+    var pictureArray = document.querySelectorAll('.picture');
+    pictureArray.forEach(function (item, index) {
+      item.addEventListener('click', function (evt) {
         addEventsOnPictures(evt, item, index);
-      }
+      });
+      item.addEventListener('keydown', function (evt) {
+        if (evt.keyCode === 13) {
+          addEventsOnPictures(evt, item, index);
+        }
+
+      });
 
     });
-
-  });
+  };
 
   galleryOverlayClose.addEventListener('click', function () {
     window.popups.closePopup();
@@ -60,6 +62,9 @@
           fillPictureOverlay(indexPicture);
         }
       }
+    },
+    initEventsOnPictures: function () {
+      initAddEvents();
     }
   };
 })();
