@@ -7,7 +7,7 @@
 
 
   // Получаем популярные фотки, по убыванию
-  var getPopularFotos = function (first, second) {
+  var comparePopularGallery = function (first, second) {
     if (first.likes < second.likes) {
       return 1;
     } else if (first.likes > second.likes) {
@@ -17,7 +17,7 @@
   };
 
   // Получаем обсуждаемые фотки, по убыванию
-  var getDiscussFotos = function (first, second) {
+  var compareDiscussGallery = function (first, second) {
     if (first.comments.length < second.comments.length) {
       return 1;
     } else if (first.comments.length > second.comments.length) {
@@ -27,7 +27,7 @@
   };
 
   // Получаем случайные фотки
-  var getRandomFotos = function () {
+  var compareRandomGallery = function () {
     return 0.5 - Math.random();
   };
   var setFilter = function (evt) {
@@ -39,17 +39,17 @@
     var newPictures = window.pictures.data;
     switch (checked) {
       case 'filter-popular':
-        newPictures.sort(getPopularFotos);
+        newPictures.sort(comparePopularGallery);
         window.pictures.fillPicturesOnPage(newPictures);
         break;
 
       case 'filter-discussed':
-        newPictures.sort(getDiscussFotos);
+        newPictures.sort(compareDiscussGallery);
         window.pictures.fillPicturesOnPage(newPictures);
         break;
 
       case 'filter-random':
-        newPictures.sort(getRandomFotos);
+        newPictures.sort(compareRandomGallery);
         window.pictures.fillPicturesOnPage(newPictures);
         break;
 
