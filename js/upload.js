@@ -124,10 +124,10 @@
     }
   };
   var form = document.querySelector('#upload-select-image');
-  var uploadFile = document.querySelector('.upload-image');
+  var uploadFile = document.querySelector('.upload-image .upload-file');
   form.addEventListener('submit', function (evt) {
     window.uploadForm(URL, new FormData(form), function (response) {
-      uploadFile.classList.add('hidden');
+      uploadFile.style.display = 'none';
       window.console.warn(response);
     });
     evt.preventDefault();

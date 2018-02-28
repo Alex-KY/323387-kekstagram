@@ -14,6 +14,7 @@
   var template = document.querySelector('#picture-template');
   var pic = document.querySelector('.pictures');
   var fragment = document.createDocumentFragment();
+  var filters = document.querySelector('.filters');
 
   // Функция получения случайного количества лайков
   var getLikes = function () {
@@ -45,39 +46,39 @@
 
   }
 
-  // Заполнение элемента шаблона посредством скачивания данных с сервера
+  // Заполнение шаблона элементами
+  window.fillPicturesOnPage = function (data) {
+    fragment = document.createDocumentFragment();
+    data.forEach(function (item) {
+      var element = template.content.cloneNode(true);
+      element.querySelector('img').setAttribute('src', item.url);
+      element.querySelector('.picture-likes').textContent = item.likes;
+      element.querySelector('.picture-comments').textContent = item.comments.length;
+      fragment.appendChild(element);
+    });
+    addTemplateOnPage();
+    window.gallery.initEventsOnPictures();
+  };
 
+  // Заполнение элемента шаблона посредством скачивания данных с сервера
   var saveNetData = function (data) {
     window.pictures = data;
-    window.pictures.forEach(function (item) {
-      var element = template.content.cloneNode(true);
-      element.querySelector('img').setAttribute('src', item.url);
-      element.querySelector('.picture-likes').textContent = item.likes;
-      element.querySelector('.picture-comments').textContent = item.comments.length;
-      fragment.appendChild(element);
-    });
-
-    addTemplateOnPage();
-    window.gallery.initEventsOnPictures();
+    window.fillPicturesOnPage(data);
+    filters.classList.remove('filters-inactive');
   };
   var onError = function (message) {
-    alert.warn(message);
-
+    window.console.error(message + '. Фотографии будут загружены локально');
     // Заполнение элемента шаблона "локально"
-    window.pictures.forEach(function (item) {
-      var element = template.content.cloneNode(true);
-      element.querySelector('img').setAttribute('src', item.url);
-      element.querySelector('.picture-likes').textContent = item.likes;
-      element.querySelector('.picture-comments').textContent = item.comments.length;
-
-      fragment.appendChild(element);
-    });
-    addTemplateOnPage();
+    window.fillPicturesOnPage(window.pictures);
     window.gallery.initEventsOnPictures();
+    filters.classList.remove('filters-inactive');
   };
 
   // Добавляем отрисованный шаблон на страницу в заданный элемент DOM-а
   var addTemplateOnPage = function () {
+    pic.querySelectorAll('.picture').forEach(function (item) {
+      item.remove();
+    });
     pic.appendChild(fragment);
   };
 
