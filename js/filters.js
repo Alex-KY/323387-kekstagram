@@ -30,33 +30,31 @@
   var getRandomFotos = function () {
     return 0.5 - Math.random();
   };
-  var setFilter = function () {
+  var setFilter = function (evt) {
     filterInputs.forEach(function (item) {
       item.removeAttribute('checked');
     });
-    var checked = window.filter.target.getAttribute('for');
+    var checked = evt.target.getAttribute('for');
     filters.querySelector('#' + checked).setAttribute('checked', '');
-    var a = window.pictures.map(function (picture) {
-      return picture;
-    });
+    var newPictures = window.pictures.data;
     switch (checked) {
       case 'filter-popular':
-        a.sort(getPopularFotos);
-        window.fillPicturesOnPage(a);
+        newPictures.sort(getPopularFotos);
+        window.pictures.fillPicturesOnPage(newPictures);
         break;
 
       case 'filter-discussed':
-        a.sort(getDiscussFotos);
-        window.fillPicturesOnPage(a);
+        newPictures.sort(getDiscussFotos);
+        window.pictures.fillPicturesOnPage(newPictures);
         break;
 
       case 'filter-random':
-        a.sort(getRandomFotos);
-        window.fillPicturesOnPage(a);
+        newPictures.sort(getRandomFotos);
+        window.pictures.fillPicturesOnPage(newPictures);
         break;
 
       case 'filter-recommend':
-        window.fillPicturesOnPage(a);
+        window.pictures.fillPicturesOnPage(window.pictures.oldData);
         break;
     }
   };
@@ -64,8 +62,9 @@
   filterButtons.forEach(function (item) {
     item.setAttribute('tabindex', 0);
     item.addEventListener('click', function (evt) {
-      window.debounce(setFilter);
-      window.filter = evt;
+      window.debounce(function () {
+        setFilter(evt);
+      });
     });
   });
 })();

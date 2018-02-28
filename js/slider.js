@@ -72,7 +72,7 @@
 
       fixSlider();
 
-      window.upload.uploadStyleChange();
+      // window.upload.uploadStyleChange();
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);

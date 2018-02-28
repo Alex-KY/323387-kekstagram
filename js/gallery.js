@@ -10,9 +10,9 @@
 
   // Заполнение оверлея данными картинки из массива
   var fillPictureOverlay = function (index) {
-    galleryOverlay.querySelector('.gallery-overlay-image').setAttribute('src', window.pictures[index].url);
-    galleryOverlay.querySelector('.likes-count').textContent = window.pictures[index].likes;
-    galleryOverlay.querySelector('.comments-count').textContent = window.pictures[index].comments.length;
+    galleryOverlay.querySelector('.gallery-overlay-image').setAttribute('src', window.pictures.data[index].url);
+    galleryOverlay.querySelector('.likes-count').textContent = window.pictures.data[index].likes;
+    galleryOverlay.querySelector('.comments-count').textContent = window.pictures.data[index].comments.length;
   };
 
   var addEventsOnPictures = function (evt, item, index) {
@@ -56,7 +56,7 @@
         }
       }
       if (evt.keyCode === 39) {
-        if (indexPicture < window.pictures.length - 1) {
+        if (indexPicture < window.pictures.data.length - 1) {
           fillPictureOverlay(++indexPicture);
         } else {
           indexPicture = 0;

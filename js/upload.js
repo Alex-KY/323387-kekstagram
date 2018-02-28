@@ -7,6 +7,7 @@
   var effectLabels = uploadControls.querySelectorAll('.upload-effect-label');
   var inputArray = uploadControls.querySelectorAll('input[type = "radio"]');
   var effectBar = uploadControls.querySelector('.upload-effect-level');
+  var effectLine = uploadControls.querySelector('.upload-effect-level-line');
   var effectPin = uploadControls.querySelector('.upload-effect-level-pin');
   var effectVal = uploadControls.querySelector('.upload-effect-level-val');
 
@@ -76,14 +77,48 @@
     document.removeEventListener('keydown', window.popups.onPopupEscPress);
   });
 
+  var uploadSetStyle = function () {
+    var style = uploadPreviewImg.style;
+    // Применяем нужные эффекты в нужном количестве
+    var effect = uploadControls.querySelector('input[checked]').getAttribute('value');
+    switch (effect) {
+      case 'chrome':
+        style.filter = 'grayscale(' + window.slider.effectLevel / 100 + ')';
+        break;
+
+      case 'sepia':
+        style.filter = 'sepia(' + window.slider.effectLevel / 100 + ')';
+        break;
+
+      case 'marvin':
+        style.filter = 'invert(' + window.slider.effectLevel + '%)';
+        break;
+
+      case 'phobos':
+        style.filter = 'blur(' + window.slider.effectLevel * 3 / 100 + 'px)';
+        break;
+
+      case 'heat':
+        style.filter = 'brightness(' + window.slider.effectLevel * 3 / 100 + ')';
+        break;
+
+      default:
+        effectBar.style.display = 'none';
+        uploadPreviewImg.style.filter = 'none';
+    }
+  };
+
+  effectLine.addEventListener('mousedown', function () {
+    var onMouseUp = function () {
+      uploadSetStyle();
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+    document.addEventListener('mouseup', onMouseUp);
+  });
+
   window.upload = {
     uploadStyleChange: function (index) {
-      var effect;
-      if (!index && index !== 0) {
-        effect = uploadControls.querySelector('input[checked]').getAttribute('value');
-      } else {
-        effect = inputArray[index].getAttribute('value');
-        // удаляем все атрибуты checked с чекбоксов
+      if (index || index === 0) {
         removeCheck();
         // добавляем checked для нужного чекбокса
         inputArray[index].setAttribute('checked', '');
@@ -92,41 +127,15 @@
         effectPin.style.left = 100 + '%';
         effectVal.style.width = 100 + '%';
       }
-      var style = uploadPreviewImg.style;
       // открываем скролл эффектов
       effectBar.style.display = 'block';
-      // Применяем нужные эффекты в нужном количестве
-      switch (effect) {
-        case 'chrome':
-          style.filter = 'grayscale(' + window.slider.effectLevel / 100 + ')';
-          break;
-
-        case 'sepia':
-          style.filter = 'sepia(' + window.slider.effectLevel / 100 + ')';
-          break;
-
-        case 'marvin':
-          style.filter = 'invert(' + window.slider.effectLevel + '%)';
-          break;
-
-        case 'phobos':
-          style.filter = 'blur(' + window.slider.effectLevel * 3 / 100 + 'px)';
-          break;
-
-        case 'heat':
-          style.filter = 'brightness(' + window.slider.effectLevel * 3 / 100 + ')';
-          break;
-
-        case 'none':
-          effectBar.style.display = 'none';
-          uploadPreviewImg.style.filter = 'none';
-      }
+      uploadSetStyle();
     }
   };
   var form = document.querySelector('#upload-select-image');
   var uploadFile = document.querySelector('.upload-image .upload-file');
   form.addEventListener('submit', function (evt) {
-    window.uploadForm(URL, new FormData(form), function (response) {
+    window.backend.uploadForm(URL, new FormData(form), function (response) {
       uploadFile.style.display = 'none';
       window.console.warn(response);
     });
