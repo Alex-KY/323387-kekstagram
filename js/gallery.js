@@ -2,6 +2,8 @@
 
 
 (function () {
+  var LEFT_ARROW = '37';
+  var RIGHT_ARROW = '39';
   var galleryOverlay = document.querySelector('.gallery-overlay');
   var galleryOverlayClose = galleryOverlay.querySelector('.gallery-overlay-close');
   var pictureArray = document.querySelectorAll('.picture');
@@ -35,9 +37,7 @@
         if (evt.keyCode === 13) {
           addEventsOnPictures(evt, item, index);
         }
-
       });
-
     });
   };
 
@@ -45,9 +45,10 @@
     window.popups.closePopup();
     document.removeEventListener('keydown', window.popups.onPopupEscPress);
   });
+
   window.gallery = {
     pressLeftRightArrow: function (evt) {
-      if (evt.keyCode === 37) {
+      if (evt.keyCode === LEFT_ARROW) {
         if (indexPicture > 0) {
           fillPictureOverlay(--indexPicture);
         } else {
@@ -55,7 +56,7 @@
           fillPictureOverlay(indexPicture);
         }
       }
-      if (evt.keyCode === 39) {
+      if (evt.keyCode === RIGHT_ARROW) {
         if (indexPicture < window.pictures.data.length - 1) {
           fillPictureOverlay(++indexPicture);
         } else {
@@ -68,4 +69,5 @@
       initAddEvents();
     }
   };
+
 })();

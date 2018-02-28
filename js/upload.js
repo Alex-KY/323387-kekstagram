@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var URL = 'https://js.dump.academy/kekstagram';
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadControls = document.querySelector('.upload-effect-controls');
   var effectLabels = uploadControls.querySelectorAll('.upload-effect-label');
@@ -43,8 +42,6 @@
     inputArray.forEach(function (item) {
       item.removeAttribute('checked');
     });
-    // Или можно точечно бахнуть чекед:
-    // g.querySelector('input[checked]').removeAttribute('checked');
   };
 
   // Добавляем на каждую превьюшку эффектов событие - применить эффект
@@ -132,10 +129,11 @@
       uploadSetStyle();
     }
   };
+
   var form = document.querySelector('#upload-select-image');
   var uploadFile = document.querySelector('.upload-image .upload-file');
   form.addEventListener('submit', function (evt) {
-    window.backend.uploadForm(URL, new FormData(form), function (response) {
+    window.backend.load(new FormData(form), 'post', function (response) {
       uploadFile.style.display = 'none';
       window.console.warn(response);
     });

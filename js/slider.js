@@ -64,6 +64,7 @@
       }
 
     };
+
     var onMouseUp = function (moveEvt) {
       moveEvt.preventDefault();
       window.slider.effectLevel = (effectPin.style.left).slice(0, effectPin.style.left.length - 2) / effectLine.offsetWidth * 100;
@@ -71,8 +72,6 @@
       effectValue.setAttribute('value', window.slider.effectLevel);
 
       fixSlider();
-
-      // window.upload.uploadStyleChange();
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -85,6 +84,7 @@
   effectLine.addEventListener('mouseover', function () {
     effectLine.style.height = effectVal.offsetHeight * 2 + 'px';
   });
+
   effectLine.addEventListener('mouseout', function () {
     effectLine.style.height = effectVal.offsetHeight / 2 + 'px';
   });
