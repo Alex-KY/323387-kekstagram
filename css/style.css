@@ -119,6 +119,7 @@ body {
 
 .upload-effect__container {
   position: relative;
+  width: 600px;
 }
 
 .upload-effect-preview {
@@ -305,6 +306,8 @@ body {
 
 .effect-image-preview {
   vertical-align: middle;
+  max-width: 600px;
+  max-height: 600px;
 }
 
 .upload-effect-controls input[type=radio] {
