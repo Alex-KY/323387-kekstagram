@@ -24,21 +24,6 @@
   effectPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
-    var fixSlider = function () {
-
-      if (window.slider.effectLevel < 0 || effectPin.offsetLeft < 0) {
-        window.slider.effectLevel = 0;
-        effectPin.style.left = 0;
-        effectVal.style.width = 0;
-      }
-      if (window.slider.effectLevel > 100 || effectPin.offsetLeft > effectLine.offsetWidth) {
-        window.slider.effectLevel = 100;
-        effectPin.style.left = effectLine.offsetWidth + 'px';
-        effectVal.style.width = effectLine.offsetWidth + 'px';
-      }
-
-    };
-
     var startCoord = {
       x: (evt.clientX).toFixed(0)
     };
@@ -71,8 +56,6 @@
       window.slider.effectLevel = +window.slider.effectLevel.toFixed(0);
       effectValue.setAttribute('value', window.slider.effectLevel);
 
-      fixSlider();
-
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
@@ -89,7 +72,7 @@
     effectLine.style.height = effectVal.offsetHeight / 2 + 'px';
   });
 
-  var pressLeftRightArrow = function (evt) {
+  var onPressLeftRightArrow = function (evt) {
     if (evt.keyCode === 37) {
       if (window.slider.effectLevel > 0) {
         window.slider.effectLevel--;
@@ -111,7 +94,7 @@
     window.upload.uploadStyleChange();
   };
 
-  effectBar.addEventListener('keydown', pressLeftRightArrow);
+  effectBar.addEventListener('keydown', onPressLeftRightArrow);
   effectLine.addEventListener('click', function (evt) {
     var a = evt.clientX - effectContainer.offsetLeft - (effectContainer.offsetWidth - effectLine.offsetWidth) / 2;
     if (a <= 0) {

@@ -18,13 +18,17 @@
 
   var uploadPreviewImg = document.querySelector('.upload-form-preview img');
 
+  var resizePreviewImg = function () {
+    resizeValue.setAttribute('value', value + '%');
+    uploadPreviewImg.style.transform = 'scale(' + value / 100 + ')';
+  };
+
   // Уменьшаем изображение по клику на "-"
   var resizeDec = document.querySelector('.upload-resize-controls-button-dec');
   resizeDec.addEventListener('click', function () {
     if (value >= 50) {
       value -= 25;
-      resizeValue.setAttribute('value', value + '%');
-      uploadPreviewImg.style.transform = 'scale(' + value / 100 + ')';
+      resizePreviewImg();
     }
   });
 
@@ -33,8 +37,7 @@
   resizeInc.addEventListener('click', function () {
     if (value <= 75) {
       value += 25;
-      resizeValue.setAttribute('value', value + '%');
-      uploadPreviewImg.style.transform = 'scale(' + value / 100 + ')';
+      resizePreviewImg();
     }
   });
 
@@ -66,13 +69,13 @@
   var uploadClose = uploadOverlay.querySelector('.upload-form-cancel');
 
   uploadOpen.addEventListener('change', function () {
-    window.popups.openPopup(uploadOverlay);
-    document.addEventListener('keydown', window.popups.onPopupEscPress);
+    window.popups.open(uploadOverlay);
+    document.addEventListener('keydown', window.popups.onEscPress);
   });
 
   uploadClose.addEventListener('click', function () {
-    window.popups.closePopup();
-    document.removeEventListener('keydown', window.popups.onPopupEscPress);
+    window.popups.close();
+    document.removeEventListener('keydown', window.popups.onEscPress);
   });
 
   var uploadSetStyle = function () {
@@ -138,7 +141,7 @@
       uploadFile.style.display = 'none';
     });
     evt.preventDefault();
-    window.popups.closePopup();
-    document.removeEventListener('keydown', window.popups.onPopupEscPress);
+    window.popups.close();
+    document.removeEventListener('keydown', window.popups.onEscPress);
   });
 })();

@@ -39,7 +39,7 @@
       window.upload.uploadStyleChange(0);
       document.querySelector('#upload-file').value = '';
     } else {
-      document.removeEventListener('keydown', window.gallery.pressLeftRightArrow);
+      document.removeEventListener('keydown', window.gallery.onPressLeftRightArrow);
     }
 
   };
@@ -47,7 +47,7 @@
   window.popups = {
 
     // Открыть окно
-    openPopup: function (winUp) {
+    open: function (winUp) {
       popup = winUp;
       popup.classList.remove('hidden');
       body.style.overflow = 'hidden';
@@ -55,7 +55,7 @@
     },
 
     // Закрыть окно
-    closePopup: function () {
+    close: function () {
       popup.classList.add('hidden');
       body.style.overflow = 'auto';
       close();
@@ -63,9 +63,9 @@
     },
 
     // Нажатие ESC в открытом окне
-    onPopupEscPress: function (evt) {
+    onEscPress: function (evt) {
       if (evt.keyCode === ESC && evt.target !== uploadHashtag && evt.target !== uploadDescription) {
-        window.popups.closePopup();
+        window.popups.close();
       }
     }
   };

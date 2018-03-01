@@ -560,7 +560,15 @@ input[type=radio]:checked + .upload-effect-label .upload-effect-preview {
   text-align: center;
 
   opacity: 0;
+}
+.picture:nth-child(2n) {
   transform: rotateY(180deg);
+}
+.picture:nth-child(2n+1) {
+  transform: rotateX(180deg);
+}
+.picture:nth-child(2n+5) {
+  transform: rotateZ(180deg);
 }
 
 .picture img {

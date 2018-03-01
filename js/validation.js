@@ -17,7 +17,7 @@
       return hashtag.toLowerCase();
     });
 
-    for (var i = 0; i < hashtagsArray.length; i++) {
+    for (var i = 0; i < hashtagsArray.length && hashtagsArray.length <= 5; i++) {
       if (hashtagsArray[i].slice(0, 1) !== '#') {
         message = 'Хэш-теги должны начинаться с решётки';
         break;
@@ -49,6 +49,11 @@
       message = 'Хэш-тегов не должно быть больше 5';
     }
 
+    setError(message);
+
+  });
+
+  var setError = function (message) {
     if (message) {
       uploadHashtag.setCustomValidity('[ Ошибка ] ' + message);
       uploadHashtag.style.outline = '2px solid red';
@@ -56,8 +61,7 @@
       uploadHashtag.setCustomValidity('');
       uploadHashtag.style.outline = 'none';
     }
-
-  });
+  };
 
   uploadDescription.addEventListener('change', function () {
     if (uploadDescription.value.length > 140) {
