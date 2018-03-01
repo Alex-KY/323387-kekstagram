@@ -25,7 +25,7 @@
     });
 
     xhr.timeout = 10000; // 10s
-    
+
     xhr.addEventListener('load', function () {
       onSuccess(xhr.response);
     });

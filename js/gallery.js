@@ -15,7 +15,7 @@
     galleryOverlay.querySelector('.likes-count').textContent = pictures[index].likes;
     galleryOverlay.querySelector('.comments-count').textContent = pictures[index].comments.length;
   };
- 
+
   // Функция получения случайного числа от n до m
   var randomNum = function (n, m) {
     return Math.random() * (m) + n;
