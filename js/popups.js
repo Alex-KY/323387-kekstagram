@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ESC = 27;
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadHashtag = uploadOverlay.querySelector('.upload-form-hashtags');
   var uploadDescription = uploadOverlay.querySelector('.upload-form-description');
@@ -63,7 +64,7 @@
 
     // Нажатие ESC в открытом окне
     onPopupEscPress: function (evt) {
-      if (evt.keyCode === 27 && evt.target !== uploadHashtag && evt.target !== uploadDescription) {
+      if (evt.keyCode === ESC && evt.target !== uploadHashtag && evt.target !== uploadDescription) {
         window.popups.closePopup();
       }
     }

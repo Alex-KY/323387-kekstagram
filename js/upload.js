@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ENTER = '13';
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadControls = document.querySelector('.upload-effect-controls');
   var effectLabels = uploadControls.querySelectorAll('.upload-effect-label');
@@ -49,7 +50,7 @@
     item.setAttribute('tabindex', 0);
 
     item.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === 13) {
+      if (evt.keyCode === ENTER) {
         window.upload.uploadStyleChange(index);
       }
     });
@@ -133,9 +134,8 @@
   var form = document.querySelector('#upload-select-image');
   var uploadFile = document.querySelector('.upload-image .upload-file');
   form.addEventListener('submit', function (evt) {
-    window.backend.load(new FormData(form), 'post', function (response) {
+    window.backend.uploadPictures(new FormData(form), function () {
       uploadFile.style.display = 'none';
-      window.console.warn(response);
     });
     evt.preventDefault();
     window.popups.closePopup();

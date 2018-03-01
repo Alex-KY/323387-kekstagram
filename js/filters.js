@@ -1,10 +1,6 @@
 'use strict';
 
 (function () {
-  var filters = document.querySelector('.filters');
-  var filterButtons = filters.querySelectorAll('label');
-  var filterInputs = filters.querySelectorAll('input');
-
 
   // Получаем популярные фотки, по убыванию
   var comparePopularGallery = function (first, second) {
@@ -30,41 +26,54 @@
   var compareRandomGallery = function () {
     return 0.5 - Math.random();
   };
-  var setFilter = function (evt) {
+
+  // Функция для установки статуса checked для инпутов
+  var filters = document.querySelector('.filters');
+  var setCheck = function (evt) {
+    var filterInputs = filters.querySelectorAll('input');
     filterInputs.forEach(function (item) {
       item.removeAttribute('checked');
     });
     var checked = evt.target.getAttribute('for');
     filters.querySelector('#' + checked).setAttribute('checked', '');
-    var newPictures = window.pictures.data;
+  };
+
+  // Функция для применения нужного фильтра
+  var setFilter = function (evt) {
+    var newPictures = window.pictures.data.map(function (picture) {
+      return picture;
+    });
+    var checked = evt.target.getAttribute('for');
     switch (checked) {
       case 'filter-popular':
         newPictures.sort(comparePopularGallery);
-        window.pictures.fillPicturesOnPage(newPictures);
         break;
 
       case 'filter-discussed':
         newPictures.sort(compareDiscussGallery);
-        window.pictures.fillPicturesOnPage(newPictures);
         break;
 
       case 'filter-random':
         newPictures.sort(compareRandomGallery);
-        window.pictures.fillPicturesOnPage(newPictures);
         break;
 
-      case 'filter-recommend':
-        window.pictures.fillPicturesOnPage(window.pictures.oldData);
+      default: // 'filter-recommend': применяется фильтр по порядку загрузки с сервера
+        newPictures = window.pictures.data;
         break;
     }
+    window.gallery.fillPicturesOnPage(newPictures);
   };
 
+  // На каждый label в панели эффектов навешиваем событие
+  var filterButtons = filters.querySelectorAll('label');
   filterButtons.forEach(function (item) {
     item.setAttribute('tabindex', 0);
     item.addEventListener('click', function (evt) {
       window.debounce(function () {
+        setCheck(evt);
         setFilter(evt);
       });
     });
   });
+
 })();
