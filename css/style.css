@@ -558,6 +558,9 @@ input[type=radio]:checked + .upload-effect-label .upload-effect-preview {
   overflow: hidden;
 
   text-align: center;
+
+  opacity: 0;
+  transform: rotateY(180deg);
 }
 
 .picture img {

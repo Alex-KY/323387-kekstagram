@@ -8,66 +8,47 @@
   var uploadDescription = uploadOverlay.querySelector('.upload-form-description');
 
   uploadHashtag.addEventListener('change', function () {
-    var message = [];
+    var message;
     var hashtags = uploadHashtag.value;
 
-    var hashtag = hashtags.split(' ');
-    for (var i = 0; i < hashtag.length; i++) {
-      if (hashtag[i].slice(0, 1) !== '#') {
-        message.push('Хэш-теги должны начинаться с решётки');
+    var hashtagsArray = hashtags.split(' ');
+    var i = 0;
+    var count = 0;
+    while (i < hashtagsArray.length - 1) {
+      if (hashtagsArray[i].toLowerCase() === hashtagsArray[i + 1].toLowerCase()) {
+        count++;
+      }
+      i++;
+    }
+    if (count > 1) {
+      message = 'Один и тот же хэш-тег не может быть использован дважды';
+    }
+    for (i = 0; i < hashtagsArray.length; i++) {
+      if (hashtagsArray[i].slice(0, 1) !== '#') {
+        message = 'Хэш-теги должны начинаться с решётки';
+        break;
+      }
+      if (hashtagsArray[i].slice(1, hashtagsArray[i].length).indexOf('#') >= 0) {
+        message = 'Хэш-теги должны разделяться пробелами';
+        break;
+      }
+      var reg = /[^#А-Яа-яA-Za-z0-9]/;
+      if (reg.test(hashtagsArray[i])) {
+        message = 'Введены недопустимые символы';
+        break;
+      }
+      if (hashtagsArray[i].length > 20) {
+        message = 'Максимальная длина одного хэш-тега 20 символов';
         break;
       }
     }
 
-    for (i = 0; i < hashtag.length; i++) {
-      if (hashtag[i].slice(1, hashtag[i].length).indexOf('#') >= 0) {
-        message.push('Хэш-теги должны разделяться пробелами');
-        break;
-      }
+    if (hashtagsArray.length > 5) {
+      message = 'Хэш-тегов не должно быть больше 5';
     }
 
-    for (i = 0; i < hashtag.length; i++) {
-      var count = 0;
-      for (var k = 0; k < hashtag.length; k++) {
-        if (hashtag[k].toLowerCase() === hashtag[i].toLowerCase()) {
-          count++;
-        }
-      }
-      if (count > 1) {
-        message.push('Один и тот же хэш-тег не может быть использован дважды');
-        break;
-      }
-    }
-
-    if (hashtag.length > 5) {
-      message.push('Хэш-тегов не должно быть больше 5');
-    }
-
-    var reg = /[#a-zA-Zа-яА-Я0-9]/;
-    for (i = 0; i < hashtag.length; i++) {
-      if (!reg.test(hashtag[i])) {
-        message.push('Введены недопустимые символы');
-        break;
-      }
-    }
-
-    for (i = 0; i < hashtag.length; i++) {
-      if (hashtag[i].length > 20) {
-        message.push('Максимальная длина одного хэш-тега 20 символов');
-        break;
-      }
-    }
-
-    var getMessage = function () {
-      var templateMessage = '';
-      message.forEach(function (item, index) {
-        templateMessage += '[Ошибка №' + (index + 1) + '] ' + item + '. ';
-      });
-      return templateMessage;
-    };
-
-    if (message.length > 0) {
-      uploadHashtag.setCustomValidity(getMessage());
+    if (message) {
+      uploadHashtag.setCustomValidity('[ Ошибка ] ' + message);
       uploadHashtag.style.outline = '2px solid red';
     } else {
       uploadHashtag.setCustomValidity('');
