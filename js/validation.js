@@ -12,21 +12,23 @@
     var hashtags = uploadHashtag.value;
 
     var hashtagsArray = hashtags.split(' ');
-    var i = 0;
-    var count = 0;
-    while (i < hashtagsArray.length - 1) {
-      if (hashtagsArray[i].toLowerCase() === hashtagsArray[i + 1].toLowerCase()) {
-        count++;
-      }
-      i++;
-    }
-    if (count > 1) {
-      message = 'Один и тот же хэш-тег не может быть использован дважды';
-    }
-    for (i = 0; i < hashtagsArray.length; i++) {
+
+    var lowCaseHashtagsArray = hashtagsArray.map(function (hashtag) {
+      return hashtag.toLowerCase();
+    });
+
+    for (var i = 0; i < hashtagsArray.length; i++) {
       if (hashtagsArray[i].slice(0, 1) !== '#') {
         message = 'Хэш-теги должны начинаться с решётки';
         break;
+      }
+      if (i > 0) {
+        var downSteps = lowCaseHashtagsArray.lastIndexOf(lowCaseHashtagsArray[i], i - 1);
+        var upSteps = lowCaseHashtagsArray.indexOf(lowCaseHashtagsArray[i], i + 1);
+        if (downSteps > -1 || upSteps > -1) {
+          message = 'Один и тот же хэш-тег не может быть использован дважды';
+          break;
+        }
       }
       if (hashtagsArray[i].slice(1, hashtagsArray[i].length).indexOf('#') >= 0) {
         message = 'Хэш-теги должны разделяться пробелами';
