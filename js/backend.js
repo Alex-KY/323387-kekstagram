@@ -9,10 +9,12 @@
     window.backend.xhr = xhr;
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
-        onSuccess(xhr.response);
-      } else {
-        onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+      if (onSuccess) {
+        if (xhr.status === 200) {
+          onSuccess(xhr.response);
+        } else {
+          onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        }
       }
     });
 
@@ -26,10 +28,6 @@
 
     xhr.timeout = 10000; // 10s
 
-    xhr.addEventListener('load', function () {
-      onSuccess(xhr.response);
-    });
-
     xhr.open(method, url);
     xhr.send(form);
   };
@@ -38,8 +36,8 @@
     loadPictures: function (onSuccess, onError) {
       return load(URL + '/data', '', 'GET', onSuccess, onError);
     },
-    uploadPictures: function (form, onSuccess) {
-      return load(URL, form, 'POST', onSuccess);
+    uploadPictures: function (form, onError) {
+      return load(URL, form, 'POST', '', onError);
     },
     xhr: ''
   };

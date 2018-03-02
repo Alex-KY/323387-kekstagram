@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var LEFT_ARROW = 37;
+  var RIGHT_ARROW = 39;
   var effectContainer = document.querySelector('.upload-effect__container');
   var uploadControls = document.querySelector('.upload-effect-controls');
   var effectBar = uploadControls.querySelector('.upload-effect-level');
@@ -73,19 +75,11 @@
   });
 
   var onPressLeftRightArrow = function (evt) {
-    if (evt.keyCode === 37) {
-      if (window.slider.effectLevel > 0) {
-        window.slider.effectLevel--;
-      } else {
-        window.slider.effectLevel = 0;
-      }
+    if (evt.keyCode === LEFT_ARROW) {
+      window.slider.effectLevel = window.slider.effectLevel > 0 ? (--window.slider.effectLevel) : 0;
     }
-    if (evt.keyCode === 39) {
-      if (window.slider.effectLevel < 100) {
-        window.slider.effectLevel++;
-      } else {
-        window.slider.effectLevel = 100;
-      }
+    if (evt.keyCode === RIGHT_ARROW) {
+      window.slider.effectLevel = window.slider.effectLevel < 100 ? (++window.slider.effectLevel) : 100;
     }
     var a = window.slider.effectLevel * effectLine.offsetWidth / 100;
     effectPin.style.left = a + 'px';

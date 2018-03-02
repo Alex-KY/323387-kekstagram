@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var ENTER = '13';
+  var ENTER = 13;
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadControls = document.querySelector('.upload-effect-controls');
   var effectLabels = uploadControls.querySelectorAll('.upload-effect-label');
@@ -134,12 +134,13 @@
     }
   };
 
+  var onError = function (message) {
+    window.output.error(message);
+  };
+
   var form = document.querySelector('#upload-select-image');
-  var uploadFile = document.querySelector('.upload-image .upload-file');
   form.addEventListener('submit', function (evt) {
-    window.backend.uploadPictures(new FormData(form), function () {
-      uploadFile.style.display = 'none';
-    });
+    window.backend.uploadPictures(new FormData(form), onError);
     evt.preventDefault();
     window.popups.close();
     document.removeEventListener('keydown', window.popups.onEscPress);

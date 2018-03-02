@@ -64,9 +64,9 @@
   };
 
   uploadDescription.addEventListener('change', function () {
-    var message = 'Длина комментария не может составлять больше 140 символов';
+    var message = '';
     if (uploadDescription.value.length > 140) {
-      message = '';
+      message = 'Длина комментария не может составлять больше 140 символов';
     }
     setError(message, uploadDescription);
 

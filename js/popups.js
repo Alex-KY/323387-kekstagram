@@ -38,6 +38,8 @@
     if (popup === uploadOverlay) {
       window.upload.uploadStyleChange(0);
       document.querySelector('#upload-file').value = '';
+      uploadHashtag.value = '';
+      uploadDescription.value = '';
     } else {
       document.removeEventListener('keydown', window.gallery.onPressLeftRightArrow);
     }

@@ -17,13 +17,13 @@
   };
 
   // Функция получения случайного числа от n до m
-  var randomNum = function (n, m) {
+  var getRandomNum = function (n, m) {
     return Math.random() * (m) + n;
   };
 
   var setAnimationOnPictures = function () {
     pictureArray.forEach(function (item) {
-      item.style.transition = 'all ' + randomNum(0.8, 1.9) + 's ease-out';
+      item.style.transition = 'all ' + getRandomNum(0.8, 1.9) + 's ease-out';
       item.style.opacity = 1;
       item.style.transform = 'rotateY(0deg)';
     });
@@ -71,10 +71,15 @@
   var fragment = document.createDocumentFragment();
   // Добавляем отрисованный шаблон на страницу в заданный элемент DOM-а
   var addTemplateOnPage = function () {
+    removeTemplateOnPage();
+    pic.appendChild(fragment);
+  };
+
+  // Удаляем картинки со страницы
+  var removeTemplateOnPage = function () {
     pic.querySelectorAll('.picture').forEach(function (item) {
       item.remove();
     });
-    pic.appendChild(fragment);
   };
 
   var onPressLeftRightArrow = function (evt) {
