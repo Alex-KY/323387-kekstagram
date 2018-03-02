@@ -84,21 +84,12 @@
 
   var onPressLeftRightArrow = function (evt) {
     if (evt.keyCode === LEFT_ARROW) {
-      if (indexPicture > 0) {
-        fillPictureOverlay(--indexPicture);
-      } else {
-        indexPicture = pictureArray.length - 1;
-        fillPictureOverlay(indexPicture);
-      }
+      indexPicture = indexPicture > 0 ? --indexPicture : pictureArray.length - 1;
     }
     if (evt.keyCode === RIGHT_ARROW) {
-      if (indexPicture < pictures.length - 1) {
-        fillPictureOverlay(++indexPicture);
-      } else {
-        indexPicture = 0;
-        fillPictureOverlay(indexPicture);
-      }
+      indexPicture = indexPicture < pictures.length - 1 ? ++indexPicture : 0;
     }
+    fillPictureOverlay(indexPicture);
   };
 
   var template = document.querySelector('#picture-template');

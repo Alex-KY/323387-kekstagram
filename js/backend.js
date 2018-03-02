@@ -2,6 +2,8 @@
 
 (function () {
   var URL = 'https://js.dump.academy/kekstagram';
+  var SUCCESS = 200;
+  var TIMEOUT = 10000;
 
   var load = function (url, form, method, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
@@ -10,7 +12,7 @@
 
     xhr.addEventListener('load', function () {
       if (onSuccess) {
-        if (xhr.status === 200) {
+        if (xhr.status === SUCCESS) {
           onSuccess(xhr.response);
         } else {
           onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
@@ -23,10 +25,8 @@
     });
 
     xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+      onError('Запрос не успел выполниться за ' + TIMEOUT + 'мс');
     });
-
-    xhr.timeout = 10000; // 10s
 
     xhr.open(method, url);
     xhr.send(form);
