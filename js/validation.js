@@ -49,28 +49,26 @@
       message = 'Хэш-тегов не должно быть больше 5';
     }
 
-    setError(message);
+    setError(message, uploadHashtag);
 
   });
 
-  var setError = function (message) {
+  var setError = function (message, element) {
     if (message) {
-      uploadHashtag.setCustomValidity('[ Ошибка ] ' + message);
-      uploadHashtag.style.outline = '2px solid red';
+      element.setCustomValidity('[ Ошибка ] ' + message);
+      element.style.outline = '2px solid red';
     } else {
-      uploadHashtag.setCustomValidity('');
-      uploadHashtag.style.outline = 'none';
+      element.setCustomValidity('');
+      element.style.outline = 'none';
     }
   };
 
   uploadDescription.addEventListener('change', function () {
+    var message = 'Длина комментария не может составлять больше 140 символов';
     if (uploadDescription.value.length > 140) {
-      uploadDescription.setCustomValidity('Длина комментария не может составлять больше 140 символов');
-      uploadDescription.style.outline = '2px solid red';
-    } else {
-      uploadDescription.setCustomValidity('');
-      uploadDescription.style.outline = 'none';
+      message = '';
     }
+    setError(message, uploadDescription);
 
   });
 })();
