@@ -35,7 +35,7 @@
     indexPicture = index;
     window.popups.open(galleryOverlay);
     fillPictureOverlay(index);
-    document.addEventListener('keydown', onPressLeftRightArrow);
+    document.addEventListener('keydown', window.gallery.onPressLeftRightArrow);
     document.addEventListener('keydown', window.popups.onEscPress);
   };
 
@@ -64,6 +64,7 @@
   var galleryOverlayClose = galleryOverlay.querySelector('.gallery-overlay-close');
   galleryOverlayClose.addEventListener('click', function () {
     window.popups.close();
+    document.removeEventListener('keydown', window.gallery.onPressLeftRightArrow);
     document.removeEventListener('keydown', window.popups.onEscPress);
   });
 
@@ -82,16 +83,6 @@
     });
   };
 
-  var onPressLeftRightArrow = function (evt) {
-    if (evt.keyCode === LEFT_ARROW) {
-      indexPicture = indexPicture > 0 ? --indexPicture : pictureArray.length - 1;
-    }
-    if (evt.keyCode === RIGHT_ARROW) {
-      indexPicture = indexPicture < pictures.length - 1 ? ++indexPicture : 0;
-    }
-    fillPictureOverlay(indexPicture);
-  };
-
   var template = document.querySelector('#picture-template');
   window.gallery = {
     fillPicturesOnPage: function (data) {
@@ -107,6 +98,16 @@
       pictures = data;
       addTemplateOnPage();
       initEventsOnPictures();
+    },
+    onPressLeftRightArrow: function (evt) {
+      if (evt.keyCode === LEFT_ARROW) {
+        indexPicture = indexPicture > 0 ? --indexPicture : pictureArray.length - 1;
+        fillPictureOverlay(indexPicture);
+      }
+      if (evt.keyCode === RIGHT_ARROW) {
+        indexPicture = indexPicture < pictures.length - 1 ? ++indexPicture : 0;
+        fillPictureOverlay(indexPicture);
+      }
     }
   };
 

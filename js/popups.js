@@ -43,6 +43,7 @@
     } else {
       document.removeEventListener('keydown', window.gallery.onPressLeftRightArrow);
     }
+    document.removeEventListener('keydown', window.popups.onEscPress);
 
   };
 

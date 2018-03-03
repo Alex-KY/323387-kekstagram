@@ -28,6 +28,8 @@
       onError('Запрос не успел выполниться за ' + TIMEOUT + 'мс');
     });
 
+    xhr.timeout = TIMEOUT;
+
     xhr.open(method, url);
     xhr.send(form);
   };
