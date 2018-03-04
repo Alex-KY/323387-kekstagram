@@ -16,28 +16,21 @@
   var value = resizeValue.getAttribute('value');
   value = +value.slice(0, value.length - 1);
 
-  var uploadPreviewImg = document.querySelector('.upload-form-preview img');
-
-  var resizePreviewImg = function () {
-    resizeValue.setAttribute('value', value + '%');
-    uploadPreviewImg.style.transform = 'scale(' + value / 100 + ')';
-  };
-
   // Уменьшаем изображение по клику на "-"
   var resizeDec = document.querySelector('.upload-resize-controls-button-dec');
   resizeDec.addEventListener('click', function () {
-    if (value >= 50) {
+    if (value > 25) {
       value -= 25;
-      resizePreviewImg();
+      window.upload.resizePreviewImg(value);
     }
   });
 
   // Уменьшаем изображение по клику на "+"
   var resizeInc = document.querySelector('.upload-resize-controls-button-inc');
   resizeInc.addEventListener('click', function () {
-    if (value <= 75) {
+    if (value < 100) {
       value += 25;
-      resizePreviewImg();
+      window.upload.resizePreviewImg(value);
     }
   });
 
@@ -117,6 +110,8 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
+  var uploadPreviewImg = document.querySelector('.upload-form-preview img');
+
   window.upload = {
     uploadStyleChange: function (index) {
       if (index || index === 0) {
@@ -131,11 +126,15 @@
       // открываем скролл эффектов
       effectBar.style.display = 'block';
       uploadSetStyle();
+    },
+    resizePreviewImg: function (newValue) {
+      resizeValue.setAttribute('value', newValue + '%');
+      uploadPreviewImg.style.transform = 'scale(' + newValue / 100 + ')';
     }
   };
 
   var onError = function (message) {
-    window.output.error(message);
+    window.utils.error(message);
   };
 
   var form = document.querySelector('#upload-select-image');

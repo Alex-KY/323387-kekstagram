@@ -5,6 +5,7 @@
   var LEFT_ARROW = 37;
   var RIGHT_ARROW = 39;
   var ENTER = 13;
+  var TIME_START_ANIMATION = 500;
 
 
   var galleryOverlay = document.querySelector('.gallery-overlay');
@@ -53,7 +54,7 @@
         }
       });
     });
-    setTimeout(setAnimationOnPictures, 500);
+    setTimeout(setAnimationOnPictures, TIME_START_ANIMATION);
   };
 
   // Добавляем событие на запрос, для заполнения инициирования наполнения галереи
@@ -62,10 +63,14 @@
   });
 
   var galleryOverlayClose = galleryOverlay.querySelector('.gallery-overlay-close');
+  galleryOverlayClose.setAttribute('tabindex', '0');
   galleryOverlayClose.addEventListener('click', function () {
     window.popups.close();
-    document.removeEventListener('keydown', window.gallery.onPressLeftRightArrow);
-    document.removeEventListener('keydown', window.popups.onEscPress);
+  });
+  galleryOverlayClose.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER) {
+      window.popups.close();
+    }
   });
 
   var pic = document.querySelector('.pictures');

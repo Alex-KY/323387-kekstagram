@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var ENTER = 13;
+
   // Проверка формы на валидность
   // Окна ввода с клавиатуры
   var uploadOverlay = document.querySelector('.upload-overlay');
@@ -49,26 +51,44 @@
       message = 'Хэш-тегов не должно быть больше 5';
     }
 
-    setError(message, uploadHashtag);
+    window.validation.setError(message, uploadHashtag);
 
   });
 
-  var setError = function (message, element) {
-    if (message) {
-      element.setCustomValidity('[ Ошибка ] ' + message);
-      element.style.outline = '2px solid red';
+  uploadHashtag.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER) {
+      evt.preventDefault();
     } else {
-      element.setCustomValidity('');
-      element.style.outline = 'none';
+      window.validation.setError('', uploadHashtag);
     }
-  };
+  });
 
   uploadDescription.addEventListener('change', function () {
     var message = '';
     if (uploadDescription.value.length > 140) {
       message = 'Длина комментария не может составлять больше 140 символов';
     }
-    setError(message, uploadDescription);
+    window.validation.setError(message, uploadDescription);
 
   });
+
+  uploadDescription.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER) {
+      evt.preventDefault();
+    } else {
+      window.validation.setError('', uploadDescription);
+    }
+  });
+
+  window.validation = {
+    setError: function (message, element) {
+      if (message) {
+        element.setCustomValidity('[ Ошибка ] ' + message);
+        element.style.outline = '2px solid red';
+      } else {
+        element.setCustomValidity('');
+        element.style.outline = 'none';
+      }
+    }
+  };
 })();

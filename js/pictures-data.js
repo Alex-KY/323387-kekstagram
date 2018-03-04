@@ -10,7 +10,7 @@
   };
 
   var onError = function (message) {
-    window.output.error(message);
+    window.utils.error(message);
   };
 
   window.pictures = {

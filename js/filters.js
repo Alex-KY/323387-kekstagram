@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ENTER = 13;
 
   // Получаем популярные фотки, по убыванию
   var comparePopularGallery = function (first, second) {
@@ -29,8 +30,8 @@
 
   // Функция для установки статуса checked для инпутов
   var filters = document.querySelector('.filters');
+  var filterInputs = filters.querySelectorAll('input');
   var setCheck = function (evt) {
-    var filterInputs = filters.querySelectorAll('input');
     filterInputs.forEach(function (item) {
       item.removeAttribute('checked');
     });
@@ -69,11 +70,23 @@
   filterButtons.forEach(function (item) {
     item.setAttribute('tabindex', 0);
     item.addEventListener('click', function (evt) {
-      window.debounce(function () {
+      window.utils.debounce(function () {
         setCheck(evt);
         setFilter(evt);
       });
     });
+    item.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === ENTER) {
+        window.utils.debounce(function () {
+          setCheck(evt);
+          setFilter(evt);
+        });
+      }
+    });
+  });
+  // Убираем мешающиеся наведения
+  filterInputs.forEach(function (item) {
+    item.setAttribute('tabindex', -1);
   });
 
 })();

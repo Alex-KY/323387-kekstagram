@@ -5,6 +5,7 @@
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadHashtag = uploadOverlay.querySelector('.upload-form-hashtags');
   var uploadDescription = uploadOverlay.querySelector('.upload-form-description');
+  var uploadResizeValue = uploadOverlay.querySelector('.upload-resize-controls-value');
   var pic = document.querySelector('.pictures');
 
   var body = document.querySelector('body');
@@ -14,6 +15,7 @@
   // Удаляем перемещение по элементам заднего фона
   var tabinexSwitch = function () {
     var footerLinks = document.querySelector('footer').querySelectorAll('a');
+    var filterLabels = document.querySelector('.filters').querySelectorAll('label');
     var flag = +pic.querySelector('a').getAttribute('tabindex');
     if (flag !== -1) {
       pic.querySelectorAll('a').forEach(function (item) {
@@ -22,11 +24,17 @@
       footerLinks.forEach(function (item) {
         item.setAttribute('tabindex', -1);
       });
+      filterLabels.forEach(function (item) {
+        item.setAttribute('tabindex', -1);
+      });
     } else {
       pic.querySelectorAll('a').forEach(function (item) {
         item.setAttribute('tabindex', 0);
       });
       footerLinks.forEach(function (item) {
+        item.setAttribute('tabindex', 0);
+      });
+      filterLabels.forEach(function (item) {
         item.setAttribute('tabindex', 0);
       });
     }
@@ -40,6 +48,10 @@
       document.querySelector('#upload-file').value = '';
       uploadHashtag.value = '';
       uploadDescription.value = '';
+      uploadResizeValue.setAttribute('value', '100%');
+      window.upload.resizePreviewImg(100);
+      window.validation.setError('', uploadHashtag);
+      window.validation.setError('', uploadDescription);
     } else {
       document.removeEventListener('keydown', window.gallery.onPressLeftRightArrow);
     }
