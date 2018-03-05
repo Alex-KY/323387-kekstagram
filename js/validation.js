@@ -2,6 +2,9 @@
 
 (function () {
   var ENTER = 13;
+  var LENGTH_MAX_DESCRIPTION = 140;
+  var LENGTH_MAX_HASHTAG = 20;
+  var LENGTH_MAX_ARR_HASHTAGS = 5;
 
   // Проверка формы на валидность
   // Окна ввода с клавиатуры
@@ -41,14 +44,14 @@
         message = 'Введены недопустимые символы';
         break;
       }
-      if (hashtagsArray[i].length > 20) {
-        message = 'Максимальная длина одного хэш-тега 20 символов';
+      if (hashtagsArray[i].length > LENGTH_MAX_HASHTAG) {
+        message = 'Максимальная длина одного хэш-тега ' + LENGTH_MAX_HASHTAG + ' символов';
         break;
       }
     }
 
-    if (hashtagsArray.length > 5) {
-      message = 'Хэш-тегов не должно быть больше 5';
+    if (hashtagsArray.length > LENGTH_MAX_ARR_HASHTAGS) {
+      message = 'Хэш-тегов не должно быть больше ' + LENGTH_MAX_ARR_HASHTAGS;
     }
 
     window.validation.setError(message, uploadHashtag);
@@ -65,8 +68,8 @@
 
   uploadDescription.addEventListener('change', function () {
     var message = '';
-    if (uploadDescription.value.length > 140) {
-      message = 'Длина комментария не может составлять больше 140 символов';
+    if (uploadDescription.value.length > LENGTH_MAX_DESCRIPTION) {
+      message = 'Длина комментария не может составлять больше ' + LENGTH_MAX_DESCRIPTION + ' символов';
     }
     window.validation.setError(message, uploadDescription);
 

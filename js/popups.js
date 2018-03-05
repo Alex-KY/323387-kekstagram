@@ -2,6 +2,7 @@
 
 (function () {
   var ESC = 27;
+  var RESIZE_MAX = 100;
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadHashtag = uploadOverlay.querySelector('.upload-form-hashtags');
   var uploadDescription = uploadOverlay.querySelector('.upload-form-description');
@@ -17,27 +18,16 @@
     var footerLinks = document.querySelector('footer').querySelectorAll('a');
     var filterLabels = document.querySelector('.filters').querySelectorAll('label');
     var flag = +pic.querySelector('a').getAttribute('tabindex');
-    if (flag !== -1) {
-      pic.querySelectorAll('a').forEach(function (item) {
-        item.setAttribute('tabindex', -1);
-      });
-      footerLinks.forEach(function (item) {
-        item.setAttribute('tabindex', -1);
-      });
-      filterLabels.forEach(function (item) {
-        item.setAttribute('tabindex', -1);
-      });
-    } else {
-      pic.querySelectorAll('a').forEach(function (item) {
-        item.setAttribute('tabindex', 0);
-      });
-      footerLinks.forEach(function (item) {
-        item.setAttribute('tabindex', 0);
-      });
-      filterLabels.forEach(function (item) {
-        item.setAttribute('tabindex', 0);
-      });
-    }
+    var tabIndex = (flag !== -1) ? -1 : 0;
+    pic.querySelectorAll('a').forEach(function (item) {
+      item.setAttribute('tabindex', tabIndex);
+    });
+    footerLinks.forEach(function (item) {
+      item.setAttribute('tabindex', tabIndex);
+    });
+    filterLabels.forEach(function (item) {
+      item.setAttribute('tabindex', tabIndex);
+    });
   };
 
   // Если закрываем окно, то какое и что обнуляем
@@ -49,7 +39,7 @@
       uploadHashtag.value = '';
       uploadDescription.value = '';
       uploadResizeValue.setAttribute('value', '100%');
-      window.upload.resizePreviewImg(100);
+      window.upload.resizePreviewImg(RESIZE_MAX);
       window.validation.setError('', uploadHashtag);
       window.validation.setError('', uploadDescription);
     } else {

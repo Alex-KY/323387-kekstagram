@@ -6,6 +6,8 @@
   var RIGHT_ARROW = 39;
   var ENTER = 13;
   var TIME_START_ANIMATION = 500;
+  var ANIMATION_DURATION_MIN = 0.8;
+  var ANIMATION_DURATION_MAX = 1.9;
 
 
   var galleryOverlay = document.querySelector('.gallery-overlay');
@@ -24,7 +26,7 @@
 
   var setAnimationOnPictures = function () {
     pictureArray.forEach(function (item) {
-      item.style.transition = 'all ' + getRandomNum(0.8, 1.9) + 's ease-out';
+      item.style.transition = 'all ' + getRandomNum(ANIMATION_DURATION_MIN, ANIMATION_DURATION_MAX) + 's ease-out';
       item.style.opacity = 1;
       item.style.transform = 'rotateY(0deg)';
     });

@@ -2,6 +2,12 @@
 
 (function () {
   var ENTER = 13;
+  var RESIZE_MIN = 25;
+  var RESIZE_MAX = 100;
+  var RESIZE_STEP = 25;
+  var SLIDER_MAX = 100;
+  var EFFECT_MAX_PHOBOS = 3;
+  var EFFECT_MAX_HEAT = 3;
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadControls = document.querySelector('.upload-effect-controls');
   var effectLabels = uploadControls.querySelectorAll('.upload-effect-label');
@@ -19,8 +25,8 @@
   // Уменьшаем изображение по клику на "-"
   var resizeDec = document.querySelector('.upload-resize-controls-button-dec');
   resizeDec.addEventListener('click', function () {
-    if (value > 25) {
-      value -= 25;
+    if (value > RESIZE_MIN) {
+      value -= RESIZE_STEP;
       window.upload.resizePreviewImg(value);
     }
   });
@@ -28,8 +34,8 @@
   // Уменьшаем изображение по клику на "+"
   var resizeInc = document.querySelector('.upload-resize-controls-button-inc');
   resizeInc.addEventListener('click', function () {
-    if (value < 100) {
-      value += 25;
+    if (value < RESIZE_MAX) {
+      value += RESIZE_STEP;
       window.upload.resizePreviewImg(value);
     }
   });
@@ -77,11 +83,11 @@
     var effect = uploadControls.querySelector('input[checked]').getAttribute('value');
     switch (effect) {
       case 'chrome':
-        style.filter = 'grayscale(' + window.slider.effectLevel / 100 + ')';
+        style.filter = 'grayscale(' + window.slider.effectLevel / SLIDER_MAX + ')';
         break;
 
       case 'sepia':
-        style.filter = 'sepia(' + window.slider.effectLevel / 100 + ')';
+        style.filter = 'sepia(' + window.slider.effectLevel / SLIDER_MAX + ')';
         break;
 
       case 'marvin':
@@ -89,11 +95,11 @@
         break;
 
       case 'phobos':
-        style.filter = 'blur(' + window.slider.effectLevel * 3 / 100 + 'px)';
+        style.filter = 'blur(' + window.slider.effectLevel * EFFECT_MAX_PHOBOS / SLIDER_MAX + 'px)';
         break;
 
       case 'heat':
-        style.filter = 'brightness(' + window.slider.effectLevel * 3 / 100 + ')';
+        style.filter = 'brightness(' + window.slider.effectLevel * EFFECT_MAX_HEAT / SLIDER_MAX + ')';
         break;
 
       default:
@@ -119,9 +125,9 @@
         // добавляем checked для нужного чекбокса
         inputArray[index].setAttribute('checked', '');
         // "Обнуляем" значения до стоковых
-        window.slider.effectLevel = 100;
-        effectPin.style.left = 100 + '%';
-        effectVal.style.width = 100 + '%';
+        window.slider.effectLevel = SLIDER_MAX;
+        effectPin.style.left = SLIDER_MAX + '%';
+        effectVal.style.width = SLIDER_MAX + '%';
       }
       // открываем скролл эффектов
       effectBar.style.display = 'block';
@@ -129,7 +135,7 @@
     },
     resizePreviewImg: function (newValue) {
       resizeValue.setAttribute('value', newValue + '%');
-      uploadPreviewImg.style.transform = 'scale(' + newValue / 100 + ')';
+      uploadPreviewImg.style.transform = 'scale(' + newValue / SLIDER_MAX + ')';
     }
   };
 
